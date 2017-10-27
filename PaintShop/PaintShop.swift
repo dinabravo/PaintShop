@@ -56,6 +56,13 @@ class PaintShop
         for i in 0...customers.count-1
         {
             var cust = customers[i]
+            
+            // maybe the customer is already satisfied because his color preference matches the one color customer's
+            if self.checkIfCustomerSatisfied(customer: cust)
+            {
+                continue
+            }
+            
             // take all gloss colors first and if its free in the dictionary or if it's the same value write it and set customer satisfied
             self.chooseColorsForCustomer(customer: &cust, colorType: .gloss)
             
@@ -65,6 +72,20 @@ class PaintShop
                 self.chooseColorsForCustomer(customer: &cust, colorType: .matte)
             }
         }
+    }
+    
+    func checkIfCustomerSatisfied(customer: Customer) -> Bool
+    {
+        for col in customer.colorRequests
+        {
+            if colorDict[col.id]! == col.colorType.rawValue
+            {
+                customer.satisfied = true
+                return true
+            }
+        }
+        
+        return false
     }
     
     func chooseColorsForCustomer(customer: inout Customer, colorType: ColorType)
